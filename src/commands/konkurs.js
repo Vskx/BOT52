@@ -49,7 +49,7 @@ module.exports = {
     const msg = await interaction.reply({ embeds: [konkursEmbed], components: [row], fetchReply: true });
 
 
-    // Zapisz do JSON
+    
     const dbPath = path.join(__dirname, '../../data/giveaways.json');
     let giveaways = [];
     try {
@@ -66,7 +66,7 @@ module.exports = {
     });
     fs.writeFileSync(dbPath, JSON.stringify(giveaways, null, 2));
 
-    // Collector for button interactions
+    
     const collector = msg.createMessageComponentCollector({
       componentType: ComponentType.Button,
       time: czas * 1000
@@ -79,7 +79,7 @@ module.exports = {
         } else {
           participants.push(i.user.id);
           await i.reply({ content: 'Dołączono do konkursu!', ephemeral: true });
-          // Update count button
+          
           const updatedRow = new ActionRowBuilder().addComponents(
             joinBtn,
             new ButtonBuilder()
@@ -105,7 +105,7 @@ module.exports = {
           pool.splice(idx, 1);
         }
       }
-      // Edytuj embed konkursowy, zachowując styl
+      
       const winEmbed = new EmbedBuilder()
         .setTitle('BOT52 | Konkurs')
         .setDescription(`> 🕒 Konkurs zakończył się: <t:${Math.floor(Date.now()/1000)}:R>\n> 👑 Zwycięzcy: ${winners.join(', ')}\n> 🎁 Nagroda: **${nagroda}**\n\n> 👤 Utworzony przez: <@${interaction.user.id}>`)
@@ -113,7 +113,7 @@ module.exports = {
         .setColor(0xFFA500)
         .setFooter({ text: `BOT52 • ${new Date().toLocaleString('pl-PL')}` })
         .setTimestamp(Date.now());
-      // Czerwony disabled button z liczbą uczestników
+      
       const redCountBtn = new ButtonBuilder()
         .setCustomId(`count_${giveawayId}_end`)
         .setLabel(`Uczestnicy: ${participants.length}`)
@@ -121,11 +121,11 @@ module.exports = {
         .setDisabled(true);
       const endRow = new ActionRowBuilder().addComponents(redCountBtn);
       await msg.edit({ embeds: [winEmbed], components: [endRow] });
-      // Czerwony pasek statusu na dole jako embed
+      
       const statusEmbed = new EmbedBuilder()
         .setDescription(`Konkurs został zakończony. Udział brało ${participants.length} osób.`)
         .setColor(0xFFA500);
-      // Embed z gratulacjami jako odpowiedź do głównego konkursu
+      
       if (participants.length === 0) {
         await msg.reply({ embeds: [winEmbed, statusEmbed] });
       } else {
